@@ -1,0 +1,29 @@
+# Віртуальне середовище
+venv/
+.venv/
+env/
+
+# Секрети
+.env
+
+# Python-кеш
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Збережені моделі (за бажанням, можна комітити)
+# models/*.joblib
+
+# Артефакти навчання (великі та не для репозиторію)
+models/*.joblib
+models/*.csv

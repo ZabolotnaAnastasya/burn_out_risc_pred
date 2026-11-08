@@ -1,0 +1,50 @@
+{
+  "run_id": "a1d9f436",
+  "model_name": "SVR_unbalanced_tuned",
+  "params": {
+    "C": 5.43670510259403,
+    "epsilon": 0.014424574668842602,
+    "gamma": 0.06991333531567578,
+    "pca_components": 0.9838987819681129
+  },
+  "features": [
+    "Year_of_Study",
+    "Pre_Semester_GPA",
+    "Weekly_GenAI_Hours",
+    "Prompt_Engineering_Skill",
+    "Tool_Diversity",
+    "Paid_Subscription",
+    "Traditional_Study_Hours",
+    "Perceived_AI_Dependency",
+    "Anxiety_Level_During_Exams",
+    "Post_Semester_GPA",
+    "Skill_Retention_Score",
+    "Major_Category_Arts",
+    "Major_Category_Business",
+    "Major_Category_Humanities",
+    "Major_Category_Medical",
+    "Major_Category_STEM",
+    "Primary_Use_Case_Copywriting/Drafting",
+    "Primary_Use_Case_Debugging/Troubleshooting",
+    "Primary_Use_Case_Direct_Answer_Generation",
+    "Primary_Use_Case_Ideation",
+    "Primary_Use_Case_Summarizing_Reading",
+    "Institutional_Policy_Actively_Encouraged",
+    "Institutional_Policy_Allowed_With_Citation",
+    "Institutional_Policy_Strict_Ban",
+    "GPA_Diff",
+    "Anxiety_Squared",
+    "Total_Study_Load",
+    "Exhaustion_Index",
+    "AI_Inefficiency"
+  ],
+  "classes": {
+    "0": "Low",
+    "1": "Medium",
+    "2": "High"
+  },
+  "postprocess": "clip(round(pred), 0, 2)",
+  "train_size": 44537,
+  "new_input_size": 4949,
+  "created_at": "2026-11-08T13:40:07.147918"
+}
