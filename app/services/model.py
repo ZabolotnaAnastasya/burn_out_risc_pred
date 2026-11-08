@@ -1,7 +1,9 @@
+import datetime as dt
+import glob
 import json
 import os
 import uuid
-import datetime as dt
+from functools import lru_cache
 
 import joblib
 import numpy as np
@@ -68,12 +70,11 @@ def run_training() -> dict:
     # 3. Тренування
     model = build_model().fit(X_tr, y_tr)
 
-    # 4. Збереження моделі та метаданих
+    # 4. Збереження моделі, метаданих і new_input
     os.makedirs(MODELS_DIR, exist_ok=True)
     model_path = os.path.join(MODELS_DIR, f"{MODEL_NAME}_{run_id}.joblib")
     joblib.dump(model, model_path)
 
-    # new_input зберігаємо окремо, щоб далі тестувати /predict
     new_input = df.loc[X_new.index].copy()
     new_input_path = os.path.join(MODELS_DIR, f"new_input_{run_id}.csv")
     new_input.to_csv(new_input_path, index=False)
@@ -106,7 +107,7 @@ def run_training() -> dict:
         "y_pred_class": to_class(raw_tr),
     }))
 
-    # 6. Метрики на train в model_metrics
+    # 6. Метрики на train у model_metrics
     metrics = evaluate(y_tr, raw_tr)
     crud.save_metrics({
         "run_id": run_id, "created_at": created_at, "model_name": MODEL_NAME,
@@ -122,3 +123,23 @@ def run_training() -> dict:
         "new_input_path": new_input_path,
         "train_metrics": metrics,
     }
+
+
+# ---- Завантаження для /predict ----
+
+def latest_model_path() -> str:
+    paths = glob.glob(os.path.join(MODELS_DIR, f"{MODEL_NAME}_*.joblib"))
+    if not paths:
+        raise FileNotFoundError("Модель не знайдено. Спочатку викличте POST /train-model.")
+    return max(paths, key=os.path.getmtime)
+
+
+@lru_cache(maxsize=2)
+def load_model(path: str):
+    return joblib.load(path)
+
+
+def load_meta(path: str) -> dict:
+    run_id = os.path.splitext(os.path.basename(path))[0].split("_")[-1]
+    with open(os.path.join(MODELS_DIR, f"{MODEL_NAME}_{run_id}_meta.json"), encoding="utf-8") as f:
+        return json.load(f)
